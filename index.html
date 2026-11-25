@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gerador de Polaroids</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1><span class="stripe"><i></i><i></i><i></i><i></i><i></i></span>Gerador de Polaroids</h1>
+  <button id="btnPdf" class="primary" disabled>Gerar PDF para impressão</button>
+</header>
+
+<main>
+  <aside class="left">
+    <label class="btn primary btn-full">
+      Adicionar fotos
+      <input id="file" type="file" accept="image/*" multiple hidden>
+    </label>
+    <div class="drop">ou arraste as fotos para qualquer lugar desta tela</div>
+    <h2>Modelo</h2>
+    <div class="models">
+      <button class="on">9 Polaroids · A4</button>
+      <button disabled>4 Polaroids · em breve</button>
+      <button disabled>6 Polaroids · em breve</button>
+      <button disabled>12 Mini · em breve</button>
+    </div>
+    <p id="status">Nenhuma foto adicionada.</p>
+  </aside>
+
+  <section class="stage">
+    <div class="pager">
+      <button id="prev" aria-label="Folha anterior">‹</button>
+      <span id="pageLabel">Folha 1 de 1</span>
+      <button id="next" aria-label="Próxima folha">›</button>
+    </div>
+    <canvas id="sheet"></canvas>
+  </section>
+
+  <aside class="right">
+    <h2>Foto selecionada</h2>
+    <p class="hint" id="noSel">Clique em uma foto na folha para ajustá-la. Arraste a foto para reposicionar e use a rolagem do mouse para dar zoom.</p>
+    <div id="controls" hidden>
+      <label class="field">Zoom
+        <input id="zoom" type="range" min="1" max="3" step="0.01" value="1">
+      </label>
+      <div class="row">
+        <button id="rotL">⟲ Girar</button>
+        <button id="rotR">Girar ⟳</button>
+      </div>
+      <div class="row">
+        <button id="moveBack">← Antes</button>
+        <button id="moveFwd">Depois →</button>
+      </div>
+      <button id="reset">Restaurar enquadramento</button>
+      <button id="remove">Remover foto</button>
+    </div>
+  </aside>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
