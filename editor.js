@@ -309,6 +309,12 @@ function createEditor(cfg) {
     }
   });
 
+  // Chamado quando o modelo muda: volta para a folha da foto selecionada
+  function relayout() {
+    page = selected >= 0 ? Math.floor(selected / perPage()) : 0;
+    render();
+  }
+
   render();
-  return { render };
+  return { render, relayout };
 }

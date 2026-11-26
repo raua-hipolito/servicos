@@ -23,13 +23,16 @@
       <input id="file" type="file" accept="image/*" multiple hidden>
     </label>
     <div class="drop">ou arraste as fotos para qualquer lugar desta tela</div>
+
     <h2>Modelo</h2>
     <div class="models">
-      <button class="on">9 Polaroids · A4</button>
-      <button disabled>4 Polaroids · em breve</button>
-      <button disabled>6 Polaroids · em breve</button>
-      <button disabled>12 Mini · em breve</button>
+      <button class="on" data-model="9">9 Polaroids · 3 × 3</button>
+      <button data-model="4">4 Polaroids · 2 × 2</button>
+      <button data-model="6">6 Polaroids · 2 × 3</button>
+      <button data-model="12">12 Mini · 3 × 4</button>
     </div>
+    <p class="hint" id="modelInfo"></p>
+
     <p id="status">Nenhuma foto adicionada.</p>
   </aside>
 
