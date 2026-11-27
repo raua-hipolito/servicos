@@ -313,3 +313,12 @@ select {
 @media (max-width: 560px) {
   .choices { grid-template-columns: 1fr; }
 }
+/* ---------- Opções do modo Foto 3×4 ---------- */
+.check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .9rem;
+  cursor: pointer;
+}
+.check input { accent-color: var(--accent); width: 16px; height: 16px; }

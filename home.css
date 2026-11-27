@@ -329,3 +329,35 @@ h1 em {
   .js .reveal-s { opacity: 1; transform: none; }
   h1 em { background-size: 100% .09em; }
 }
+
+/* ---------- Terceiro cartão (Foto 3×4) ---------- */
+.formats { max-width: 1200px; }
+.cards { grid-template-columns: repeat(3, 1fr); }
+.card.black { --c: #000; }
+
+.sheet.id {
+  aspect-ratio: 100 / 150;
+  width: clamp(110px, 38%, 150px);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 6%;
+  padding: 12% 14%;
+  align-content: center;
+}
+.idp {
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  border: 1px solid #dedede;
+  transition: transform .45s var(--ease);
+  transition-delay: calc(var(--i) * 28ms);
+}
+.idp .ph { width: 100%; height: 100%; }
+.card:hover .idp { transform: translateY(-6%); }
+
+@media (max-width: 980px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 700px) {
+  .cards { grid-template-columns: 1fr; }
+}

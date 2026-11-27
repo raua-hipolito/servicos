@@ -29,10 +29,36 @@ function createEditor(cfg) {
   const sel = () => photos[selected];
 
   // ---------- Desenho ----------
-  function drawPhoto(c, p, r) {
+   // Cópia reduzida da foto, usada só na tela (o PDF usa a original)
+  const VIEW_MAX = 900;
+  function viewOf(p) {
+    if (p.viewSrc !== p.img) {
+      const iw = p.img.naturalWidth || p.img.width;
+      const ih = p.img.naturalHeight || p.img.height;
+      const k = VIEW_MAX / Math.max(iw, ih);
+      if (k >= 1) {
+        p.view = null;   // já é pequena, usa a própria imagem
+      } else {
+        const v = document.createElement('canvas');
+        v.width = Math.round(iw * k);
+        v.height = Math.round(ih * k);
+        const x = v.getContext('2d');
+        x.imageSmoothingQuality = 'high';
+        x.drawImage(p.img, 0, 0, v.width, v.height);
+        p.view = v;
+      }
+      p.viewSrc = p.img;
+    }
+    return p.view || p.img;
+  }
+
+  function drawPhoto(c, p, r, preview) {
+    const src = preview ? viewOf(p) : p.img;
+    const iw = src.naturalWidth || src.width;
+    const ih = src.naturalHeight || src.height;
     const odd = p.rot % 2 === 1;
-    const sw = odd ? p.img.naturalHeight : p.img.naturalWidth;
-    const sh = odd ? p.img.naturalWidth : p.img.naturalHeight;
+    const sw = odd ? ih : iw;
+    const sh = odd ? iw : ih;
     const sc = Math.max(r.w / sw, r.h / sh) * p.zoom;
 
     // Impede que apareçam faixas vazias dentro da moldura
@@ -48,10 +74,9 @@ function createEditor(cfg) {
     c.translate(r.x + r.w / 2 + p.ox * r.w, r.y + r.h / 2 + p.oy * r.h);
     c.rotate(p.rot * Math.PI / 2);
     c.scale(sc, sc);
-    c.drawImage(p.img, -p.img.naturalWidth / 2, -p.img.naturalHeight / 2);
+    c.drawImage(src, -iw / 2, -ih / 2);
     c.restore();
   }
-
   // s = pixels por mm. preview = mostra espaços vazios e seleção.
   function drawPage(c, s, pageIdx, preview) {
     const slots = cfg.slots();
@@ -112,7 +137,7 @@ function createEditor(cfg) {
   }
 
   // ---------- Atualização da tela ----------
-  function render() {
+function renderNow() {
     page = clamp(page, 0, pageCount() - 1);
     drawPage(ctx, PREVIEW_SCALE, page, true);
 
@@ -133,6 +158,15 @@ function createEditor(cfg) {
       $('moveFwd').disabled = selected === photos.length - 1;
     }
   }
+    // Junta vários pedidos de atualização em um só por quadro (mais fluido)
+  let raf = 0;
+  function render() {
+    if (raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      renderNow();
+    });
+  }
 
   // ---------- Adicionar fotos ----------
   function addFiles(fileList) {
@@ -146,7 +180,7 @@ function createEditor(cfg) {
       const img = new Image();
       const url = URL.createObjectURL(f);
       img.onload = () => {
-        loaded[i] = { img, name: f.name, zoom: 1, ox: 0, oy: 0, rot: 0 };
+        loaded[i] = { img, orig: img, name: f.name, zoom: 1, ox: 0, oy: 0, rot: 0 };
         done();
       };
       img.onerror = () => {
@@ -159,8 +193,10 @@ function createEditor(cfg) {
 
     function done() {
       if (--pending > 0) return;
-      photos.push(...loaded.filter(Boolean));
+      const added = loaded.filter(Boolean);
+      photos.push(...added);
       render();
+      if (cfg.onAdd) cfg.onAdd(added);   // gancho para processar as fotos novas
     }
   }
 
@@ -316,5 +352,5 @@ function createEditor(cfg) {
   }
 
   render();
-  return { render, relayout };
+  return { render, relayout, getPhotos: () => photos };
 }

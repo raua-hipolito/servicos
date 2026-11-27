@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Foto 3×4 · Gerador de Impressões</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <a class="back" href="index.html">← Início</a>
+    <h1>Foto 3×4</h1>
+  </div>
+  <button id="btnPdf" class="primary" disabled>Gerar PDF para impressão</button>
+</header>
+
+<main>
+  <aside class="left">
+    <label class="btn primary btn-full">
+      Adicionar fotos
+      <input id="file" type="file" accept="image/*" multiple hidden>
+    </label>
+    <div class="drop">ou arraste as fotos para qualquer lugar desta tela</div>
+
+    <h2>Fundo</h2>
+    <label class="check">
+      <input type="checkbox" id="rmbg" checked>
+      Remover fundo
+    </label>
+
+    <label class="field">Método
+      <select id="method">
+        <option value="ai">Inteligente (recomendado)</option>
+        <option value="simple">Simples (só fundo branco liso)</option>
+      </select>
+    </label>
+
+    <label class="field">Cor do novo fundo
+      <select id="bgcolor">
+        <option value="#ffffff">Branco</option>
+        <option value="#2f6db5">Azul</option>
+        <option value="#d3202a">Vermelho</option>
+        <option value="#d9d9d9">Cinza claro</option>
+      </select>
+    </label>
+
+    <label class="field" id="tolWrap" hidden>Tolerância do branco
+      <input id="tol" type="range" min="3" max="40" step="1" value="10">
+    </label>
+    <p class="hint" id="bgHint">Na primeira vez o modelo de IA é baixado (pode demorar um pouco). Depois fica guardado no navegador.</p>
+
+    <h2>Disposição na folha</h2>
+    <label class="field">
+      <select id="layout">
+        <option value="2x3">2 colunas × 3 linhas</option>
+        <option value="3x2">3 colunas × 2 linhas</option>
+      </select>
+    </label>
+    <p class="hint">Papel A6 (10 × 15 cm), 6 fotos de 3 × 4 cm por folha.</p>
+
+    <p id="status">Nenhuma foto adicionada.</p>
+  </aside>
+
+  <section class="stage">
+    <div class="pager">
+      <button id="prev" aria-label="Folha anterior">‹</button>
+      <span id="pageLabel">Folha 1 de 1</span>
+      <button id="next" aria-label="Próxima folha">›</button>
+    </div>
+    <canvas id="sheet"></canvas>
+  </section>
+
+  <aside class="right">
+    <h2>Foto selecionada</h2>
+    <p class="hint" id="noSel">Clique em uma foto na folha para ajustá-la. Arraste a foto para reposicionar e use a rolagem do mouse para dar zoom.</p>
+    <div id="controls" hidden>
+      <label class="field">Zoom
+        <input id="zoom" type="range" min="1" max="3" step="0.01" value="1">
+      </label>
+      <div class="row">
+        <button id="rotL">⟲ Girar</button>
+        <button id="rotR">Girar ⟳</button>
+      </div>
+      <div class="row">
+        <button id="moveBack">← Antes</button>
+        <button id="moveFwd">Depois →</button>
+      </div>
+      <button id="reset">Restaurar enquadramento</button>
+      <button id="remove">Remover foto</button>
+    </div>
+  </aside>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="editor.js"></script>
+<script src="foto3x4.js"></script>
+</body>
+</html>
